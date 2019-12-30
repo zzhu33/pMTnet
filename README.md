@@ -33,7 +33,8 @@ The output for test_input.csv is under test/output.
 added platform-independent paths\
 added option to specify output filename and default input values\
 ***changed input style***\
-example:
+command:
 ```
 python pMTnetMut.py --input <inputFilePath> --outputFilename <outputFilename> --library <library> --output <outputDir> --output_log <outputLogPath>
 ```
+default values are set for tutorial: simply run without input to test. Output log and output csv names are modified to avoid overwriting reference example outputs.
