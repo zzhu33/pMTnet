@@ -1,4 +1,4 @@
-# pMTnet (forked from ![tianshilu] (https://github.com/tianshilu/pMTnet))
+# pMTnet (forked from [tianshilu](https://github.com/tianshilu/pMTnet))
 Deep learning neural network prediction tcr binding specificity to peptide and HLA based on peptide sequences. 
 ![preview](https://github.com/tianshilu/pMTnet/blob/master/example_pic/flow_chart_simple.png)
 ## Dependencies
