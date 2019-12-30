@@ -30,10 +30,10 @@ python pMTnet.py -input test/input/test_input.csv -library library -output test/
 The output for test_input.csv is under test/output.
 
 # pMTnet_argparse
-added platform-independent paths
-added option to specify output filename and default input values
-***changed input style***
+added platform-independent paths\
+added option to specify output filename and default input values\
+***changed input style***\
 example:
-'''
+```
 python pMTnetMut.py --input <inputFilePath> --outputFilename <outputFilename> --library <library> --output <outputDir> --output_log <outputLogPath>
-'''
+```
