@@ -1,4 +1,4 @@
-# pMTnet (forked from [tianshilu] https://github.com/tianshilu/pMTnet)
+# pMTnet (forked from [tianshilu] (https://github.com/tianshilu/pMTnet))
 Deep learning neural network prediction tcr binding specificity to peptide and HLA based on peptide sequences. 
 ![preview](https://github.com/tianshilu/pMTnet/blob/master/example_pic/flow_chart_simple.png)
 ## Dependencies
@@ -33,7 +33,7 @@ The output for test_input.csv is under test/output.
 added platform-independent paths
 added option to specify output filename and default input values
 ***changed input style***
-example:.\
+example:
 '''
 python pMTnetMut.py --input <inputFilePath> --outputFilename <outputFilename> --library <library> --output <outputDir> --output_log <outputLogPath>
 '''
