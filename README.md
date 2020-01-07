@@ -35,6 +35,13 @@ added option to specify output filename and default input values\
 ***changed input style***\
 command:
 ```
-python pMTnetMut.py --input <inputFilePath> --outputFilename <outputFilename> --library <library> --output <outputDir> --output_log <outputLogPath>
+python pMTnet_argparse.py --input <inputFilePath> --outputFilename <outputFilename> --library <library> --output <outputDir> --output_log <outputLogPath>
 ```
-default values are set for tutorial: simply run without input to test. Output log and output csv names are modified to avoid overwriting reference example outputs.
+default values are set for tutorial: simply run without input to test. Output log and output csv names are modified to avoid overwriting reference example outputs.\
+
+# pMTnetMut
+command:
+```
+python pMTnetMut.py --input <inputFilePath> --outputFilename <outputFilename> --library <library> --output <outputDir> --output_log <outputLogPath> --mutateSeq <seq('a', or 'c')> --mutationType <type> --gentleMut <"gentle"mutationFactor>
+```
+see help `-h` for more info
