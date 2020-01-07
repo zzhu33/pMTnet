@@ -40,6 +40,8 @@ python pMTnet_argparse.py --input <inputFilePath> --outputFilename <outputFilena
 default values are set for tutorial: simply run without input to test. Output log and output csv names are modified to avoid overwriting reference example outputs.\
 
 # pMTnetMut
+added ability to perform several types of mutant scans\
+*note that "X" scan is not compatible with tables for TCR encoding and will throw an error if used with `--mutateSeq c`*\
 command:
 ```
 python pMTnetMut.py --input <inputFilePath> --outputFilename <outputFilename> --library <library> --output <outputDir> --output_log <outputLogPath> --mutateSeq <seq('a', or 'c')> --mutationType <type> --gentleMut <"gentle"mutationFactor>
