@@ -47,8 +47,10 @@ if not os.path.isdir(output_dir):
 output_log_dir = args.output_log
 outputFn = args.outputFilename
 if not '.csv' in outputFn:
-    outputFn += '.csv'
-outputFilePath = os.path.join(output_dir, outputFn)
+    outputFns = outputFn + '.csv'
+else:
+    outputFns = outputFn
+outputFilePath = os.path.join(output_dir, outputFns)
 
 mutSeq = args.mutateSeq
 if mutSeq == 'a':
@@ -272,19 +274,34 @@ def peptide_encode_HLA(peptide, maxlen,encoding_method, mutIndex=None, mutFactor
     o = list(map(lambda x: aa_dict_one_hot[x.upper()] if x.upper() in aa_dict_one_hot.keys() else 20 , peptide)) 
     #if the amino acid is not valid, replace it with padding aa 'X':20       
     k = len(o)
-    if mutFactor:
-        i = 0
-        while i < k:
-            if i == mutIndex:
-                o[i] *= mutFactor
-            i += 1
     #use 'X'(20) for padding
     o = o[:k // 2] + [20] * (int(maxlen) - k) + o[k // 2:]
     if len(o) != maxlen:
         msg = 'Peptide %s has length %d < maxlen = %d, but pad is "none".'
         raise ValueError(msg % (peptide, len(peptide), maxlen))
     result=ENCODING_DATA_FRAMES[encoding_method].iloc[o]
-    return np.asarray(result)
+    if mutFactor and (mutIndex != 'n/a'):
+        indList = []
+        paddedMutIndex = -1
+        i = 0
+        while i < k:
+            indList.append(i)
+            i += 1
+        paddedIndList = indList[:k // 2] + [90] * (int(maxlen) - k) + indList[k // 2:]
+        i = 0
+        while i < maxlen:
+            if paddedIndList[i] == mutIndex:
+                paddedMutIndex = i
+                break
+            else:
+                i += 1
+        if paddedMutIndex == -1:
+            raise UnboundLocalError(f'***********mutation index {mutIndex} not found mutFactor {mutFactor}******\n\n')
+        resultF = np.asarray(result, dtype='float64')
+        resultF[paddedMutIndex] *= mutFactor
+    else:
+        resultF = np.asarray(result)
+    return resultF
 
 def TCRMap(dataset,aa_dict, mutInds=None, mutFactor=None):
     #Wrapper of aamapping    
@@ -455,8 +472,8 @@ HLA_antigen_encoded_result=HLA_antigen_encoder.predict([antigen_array,HLA_array]
 TCR_encoded_matrix=pd.DataFrame(data=TCR_encoded_result,index=range(1,len(TCR_list)+1))
 HLA_antigen_encoded_matrix=pd.DataFrame(data=HLA_antigen_encoded_result,index=range(1,len(HLA_list)+1))
 allele_matrix=pd.DataFrame({'CDR3':TCR_list,'Antigen':antigen_list,'HLA':HLA_list},index=range(1,len(TCR_list)+1))
-TCR_encoded_matrix.to_csv(os.path.join(output_dir, 'TCR_output.csv'),sep=',')
-HLA_antigen_encoded_matrix.to_csv(os.path.join(output_dir, 'MHC_antigen_output.csv'),sep=',')
+TCR_encoded_matrix.to_csv(os.path.join(output_dir, f'{outputFn}_TCR_output.csv'),sep=',')
+HLA_antigen_encoded_matrix.to_csv(os.path.join(output_dir, f'{outputFn}_MHC_antigen_output.csv'),sep=',')
 print('Encoding Accomplished.\n')
 #########################################                                                                                                                       
 # make prediction based on encoding     #                                                                                                                     
@@ -478,8 +495,8 @@ ternary_prediction.load_weights(model_dir+'/weights.h5')
 #read background negative TCRs
 TCR_neg_df_1k=pd.read_csv(os.path.join(library_dir, 'bg_tcr_library', 'TCR_output_1k.csv'),index_col=0)
 TCR_neg_df_10k=pd.read_csv(os.path.join(library_dir, 'bg_tcr_library','TCR_output_10k.csv'),index_col=0)
-TCR_pos_df=pd.read_csv(os.path.join(output_dir, 'TCR_output.csv'),index_col=0)
-MHC_antigen_df=pd.read_csv(os.path.join(output_dir, 'MHC_antigen_output.csv'),index_col=0)
+TCR_pos_df=pd.read_csv(os.path.join(output_dir, f'{outputFn}_TCR_output.csv'),index_col=0)
+MHC_antigen_df=pd.read_csv(os.path.join(output_dir, f'{outputFn}_MHC_antigen_output.csv'),index_col=0)
 ################ make prediction ################# 
 rank_output=[]
 for each_data_index in range(TCR_pos_df.shape[0]):
@@ -541,5 +558,5 @@ rank_output_matrix.to_csv(outputFilePath,sep=',')
 print('Prediction Accomplished.\n')
 log_file.close()
 #delete encoding files
-os.remove(os.path.join(output_dir,'MHC_antigen_output.csv'))
-os.remove(os.path.join(output_dir,'TCR_output.csv'))
+os.remove(os.path.join(output_dir,f'{outputFn}_MHC_antigen_output.csv'))
+os.remove(os.path.join(output_dir,f'{outputFn}_TCR_output.csv'))
